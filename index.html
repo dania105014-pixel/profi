@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="xxxx.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <title>المعلومات الشخصية</title>
+</head>
+<body>
+    <main class="profile-card">
+        <aside class="profile-side">
+            <div class="avatar-wrap">
+                <img id="avatarPreview" src="5224733016310096701_120.jpg" alt="الصورة الشخصية">
+                <label class="avatar-edit" for="avatarInput" title="تغيير الصورة">
+                    <i class="fa-solid fa-camera"></i>
+                </label>
+                <input id="avatarInput" type="file" accept="image/*" hidden>
+            </div>
+
+            <h1 id="previewName">حسين محمد </h1>
+            <p id="previewJob">مصمم مواقع</p>
+        </aside>
+
+        <section class="profile-content">
+            <header class="card-header">
+                <div>
+                    <span class="eyebrow">الملف الشخصي</span>
+                    <h2>المعلومات الشخصية</h2>
+                </div>
+                <button id="editBtn" class="edit-button" type="button">
+                    <i class="fa-solid fa-pen"></i>
+                    <span>تعديل</span>
+                </button>
+            </header>
+
+            <form id="profileForm">
+                <div class="form-grid">
+                    <label>
+                        <span>الاسم الكامل</span>
+                        <input name="name" type="text" value="محمد حسن" disabled>
+                    </label>
+
+                    <label>
+                        <span>المهنة</span>
+                        <input name="job" type="text" value="مصمم مواقع" disabled>
+                    </label>
+
+                    <label>
+                        <span>البريد الإلكتروني</span>
+                        <input name="email" type="email" value="mohammed@example.com" disabled>
+                    </label>
+
+                    <label>
+                        <span>رقم الهاتف</span>
+                        <input name="phone" type="tel" value="+964 7775551039" disabled>
+                    </label>
+
+                    <label>
+                        <span>تاريخ الميلاد</span>
+                        <input name="birthdate" type="date" value="1999-05-14" disabled>
+                    </label>
+
+                    <label>
+                        <span>العنوان</span>
+                        <input name="location" type="text" value="بغداد، العراق" disabled>
+                    </label>
+                </div>
+
+                <label class="bio-field">
+                    <span>نبذة شخصية</span>
+                    <textarea name="bio" rows="4" disabled>مصمم واجهات ومطور رقمي مهتم ببناء تجارب استخدام بسيطة وجذابة.</textarea>
+                </label>
+
+                <div class="form-actions" id="formActions" hidden>
+                    <button class="cancel-button" id="cancelBtn" type="button">إلغاء</button>
+                    <button class="save-button" type="submit">
+                        <i class="fa-solid fa-check"></i>
+                        حفظ التغييرات
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById('profileForm');
+        const editBtn = document.getElementById('editBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const formActions = document.getElementById('formActions');
+        const inputs = form.querySelectorAll('input, textarea');
+        const previewName = document.getElementById('previewName');
+        const previewJob = document.getElementById('previewJob');
+
+        let originalValues = {};
+
+        function setEditing(editing) {
+            inputs.forEach((input) => input.disabled = !editing);
+            formActions.hidden = !editing;
+            editBtn.hidden = editing;
+        }
+
+        editBtn.addEventListener('click', () => {
+            originalValues = Object.fromEntries(new FormData(form));
+            setEditing(true);
+            form.elements.name.focus();
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            Object.entries(originalValues).forEach(([name, value]) => {
+                form.elements[name].value = value;
+            });
+            previewName.textContent = originalValues.name;
+            previewJob.textContent = originalValues.job;
+            setEditing(false);
+        });
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const data = new FormData(form);
+            previewName.textContent = data.get('name');
+            previewJob.textContent = data.get('job');
+            setEditing(false);
+        });
+
+        form.elements.name.addEventListener('input', (event) => {
+            previewName.textContent = event.target.value || 'الاسم';
+        });
+
+        form.elements.job.addEventListener('input', (event) => {
+            previewJob.textContent = event.target.value || 'المهنة';
+        });
+
+        document.getElementById('avatarInput').addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                document.getElementById('avatarPreview').src = URL.createObjectURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
